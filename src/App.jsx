@@ -21,6 +21,13 @@ const todoReducer = (state, action) => {
     // whose id does not match action.payload (the id of the todo to be deleted).
     case 'DELETE_TODO':
       return state.filter(todo => todo.id !== action.payload);
+
+    //Adding a case to handle toggling the complete state:
+    case 'TOGGLE_TODO':
+      return state.map(todo =>
+        todo.id === action.payload ? { ...todo, complete: !todo.complete } : todo
+      );
+
     default:
       return state;
   }
@@ -61,11 +68,17 @@ const App = () => {
     dispatch({ type: 'DELETE_TODO', payload: id });
   };
 
+  //Function handleToggleTodo triggers an action ('TOGGLE_TODO') 
+  //to toggle the completion state of a todo item identified by its id.
+  const handleToggleTodo = id => {
+    dispatch({ type: 'TOGGLE_TODO', payload: id });
+  };
+
 
   //Render Method:
 
   //The component renders a container (div.todo-container) with a title (h1) and an input field (input.todo-input) for adding new todos.
-  
+
   //The "Add" button triggers handleAddTodo when clicked.
 
   // The list of todos (ul.todo-list) is rendered using todos.map to create list items (li.todo-item). 
@@ -89,8 +102,13 @@ const App = () => {
       <ul className="todo-list">
         {todos.map(todo => (
           <li key={todo.id} className="todo-item">
-            <span className="todo-text">
-              {todo.text}
+            <input
+              type="checkbox"
+              checked={todo.complete}
+              onChange={() => handleToggleTodo(todo.id)}
+            />
+            <span className={`todo-text ${todo.complete ? 'completed' : ''}`}>
+            {todo.text}
             </span>
             <button className="todo-delete" onClick={() => handleDeleteTodo(todo.id)}>
               Delete

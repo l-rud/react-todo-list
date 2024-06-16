@@ -77,3 +77,13 @@ h1 {
 .todo-delete:hover {
   background-color: maroon;
 }
+
+.todo-text {
+  /* Default text style */
+  text-decoration: none;
+}
+
+.todo-text.completed {
+  /* Style when todo is completed */
+  text-decoration: line-through;
+}
